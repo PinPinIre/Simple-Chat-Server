@@ -91,8 +91,10 @@ class ThreadHandler(threading.Thread):
             message = ""
             # Loop and receive data
             while "\n\n" not in message:
-                data = con.recv(TCPServer.LENGTH)
+                data = con.recv(self.buffer_length)
                 message += data
+                if len(data) < self.buffer_length:
+                    break
 
             # If valid http request with message body
             if len(message) > 0:

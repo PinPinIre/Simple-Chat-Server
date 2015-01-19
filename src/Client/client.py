@@ -15,17 +15,17 @@ logging.basicConfig(filename=epoch_time+'.log', level=logging.DEBUG)
 class TCPClient:
     PORT = 8000
     HOST = "0.0.0.0"
-    JOIN_HEADER = "JOIN_CHATROOM: %s\nCLIENT_IP: 0\nPORT: 0\nCLIENT_NAME: %s\n\n"
-    LEAVE_HEADER = "LEAVE_CHATROOM: %s\nJOIN_ID: %s\nCLIENT_NAME: %s\n\n"
+    JOIN_HEADER = "JOIN_CHATROOM: %s\nCLIENT_IP: 0\nPORT: 0\nCLIENT_NAME: %s"
+    LEAVE_HEADER = "LEAVE_CHATROOM: %s\nJOIN_ID: %s\nCLIENT_NAME: %s"
     MESSAGE_HEADER = "CHAT: %s\nJOIN_ID: %s\nCLIENT_NAME: %s\nMESSAGE: %s\n\n"
-    DISCONNECT_HEADER = "DISCONNECT: 0\nPORT: 0\nCLIENT_NAME: %s\n\n"
+    DISCONNECT_HEADER = "DISCONNECT: 0\nPORT: 0\nCLIENT_NAME: %s"
     JOIN_REGEX = "join [a-zA-Z0-9_]* [a-zA-Z0-9_]*"
     LEAVE_REGEX = "leave [a-zA-Z0-9_]* [a-zA-Z0-9_]* [a-zA-Z0-9_]*"
     MSG_REGEX = "msg [a-zA-Z0-9_]* [a-zA-Z0-9_]* [a-zA-Z0-9_]* [a-zA-Z0-9_]*"
     MESSAGE_REPLY_REGEX = "CHAT: [0-9]*\nCLIENT_NAME: [a-zA-Z0-9_]*\nMESSAGE: [a-zA-Z0-9_]*\n\n"
-    JOIN_SUCCESS_REGEX = "JOINED_CHATROOM: [a-zA-Z0-9_]*\nSERVER_IP: 0\nPORT: 0\nROOM_REF: [0-9]*\nJOIN_ID: [0-9]*\n\n"
-    JOIN_FAIL_REGEX = "ERROR_CODE: [0-9]*\nERROR_DESCRIPTION: .*\n\n"
-    LEAVE_REPLY_REGEX = "LEFT_CHATROOM: [0-9]*\nJOIN_ID: [0-9]*\n\n"
+    JOIN_SUCCESS_REGEX = "JOINED_CHATROOM: [a-zA-Z0-9_]*\nSERVER_IP: 0\nPORT: 0\nROOM_REF: [0-9]*\nJOIN_ID: [0-9]*"
+    JOIN_FAIL_REGEX = "ERROR_CODE: [0-9]*\nERROR_DESCRIPTION: .*"
+    LEAVE_REPLY_REGEX = "LEFT_CHATROOM: [0-9]*\nJOIN_ID: [0-9]*"
     NEW_JOIN_REGEX = "JOINED_ROOM: [0-9]*\nCLIENT_NAME: [a-zA-Z0-9_]*"
     REQUEST = "%s"
     LENGTH = 4096
@@ -130,7 +130,7 @@ class ThreadHandler(threading.Thread):
             message = ""
             # Loop and receive data
             while "\n\n" not in message:
-                data = self.socket.recv(1024)
+                data = self.socket.recv(self.buffer_length)
                 message += data
                 if len(data) < self.buffer_length:
                     break
