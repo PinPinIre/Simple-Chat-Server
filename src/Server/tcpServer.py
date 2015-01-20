@@ -8,6 +8,9 @@ import Queue
 import os
 import re
 import sys
+import logging
+
+logging.basicConfig(filename="receivedMessage.log", level=logging.DEBUG)
 
 
 class TCPServer(object):
@@ -95,7 +98,7 @@ class ThreadHandler(threading.Thread):
                 message += data
                 if len(data) < self.buffer_length:
                     break
-
+            logging.debug("Received:\n" + message + "\n")
             # If valid http request with message body
             if len(message) > 0:
                 if message == "KILL_SERVICE\n\n":
