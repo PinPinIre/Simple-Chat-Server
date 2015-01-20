@@ -10,16 +10,16 @@ from tcpServer import TCPServer
 
 
 class ChatServer(TCPServer):
-    JOIN_REGEX = "JOIN_CHATROOM: [a-zA-Z0-9_]*\nCLIENT_IP: 0\nPORT: 0\nCLIENT_NAME: [a-zA-Z0-9_]*"
-    LEAVE_REGEX = "LEAVE_CHATROOM: [0-9]*\nJOIN_ID: [0-9]*\nCLIENT_NAME: [a-zA-Z0-9_]*"
-    MESSAGE_REGEX = "CHAT: [0-9]*\nJOIN_ID: [0-9]*\nCLIENT_NAME: [a-zA-Z0-9_]*\nMESSAGE: [a-zA-Z0-9_]*\n\n"
-    DISCONNECT_REGEX = "DISCONNECT: 0\nPORT: 0\nCLIENT_NAME: [a-zA-Z0-9_]*"
-    JOIN_REQUEST_RESPONSE_SUCCESS = "JOINED_CHATROOM: %s\nSERVER_IP: %s\nPORT: %s\nROOM_REF: %d\nJOIN_ID: %d"
-    JOIN_REQUEST_RESPONSE_FAIL = "ERROR_CODE: %d\nERROR_DESCRIPTION: %s"
-    LEAVE_REQUEST_RESPONSE_SUCCESS = "LEFT_CHATROOM: %s\nJOIN_ID: %s"
+    JOIN_REGEX = "JOIN_CHATROOM:[a-zA-Z0-9_]*\nCLIENT_IP:0\nPORT:0\nCLIENT_NAME:[a-zA-Z0-9_]*"
+    LEAVE_REGEX = "LEAVE_CHATROOM:[0-9]*\nJOIN_ID:[0-9]*\nCLIENT_NAME:[a-zA-Z0-9_]*"
+    MESSAGE_REGEX = "CHAT:[0-9]*\nJOIN_ID:[0-9]*\nCLIENT_NAME:[a-zA-Z0-9_]*\nMESSAGE:[a-zA-Z0-9_]*\n\n"
+    DISCONNECT_REGEX = "DISCONNECT:0\nPORT:0\nCLIENT_NAME:[a-zA-Z0-9_]*"
+    JOIN_REQUEST_RESPONSE_SUCCESS = "JOINED_CHATROOM:%s\nSERVER_IP:%s\nPORT:%s\nROOM_REF:%d\nJOIN_ID:%d"
+    JOIN_REQUEST_RESPONSE_FAIL = "ERROR_CODE:%d\nERROR_DESCRIPTION:%s"
+    LEAVE_REQUEST_RESPONSE_SUCCESS = "LEFT_CHATROOM:%s\nJOIN_ID:%s"
     LEAVE_REQUEST_RESPONSE_FAIL = LEAVE_REQUEST_RESPONSE_SUCCESS
-    MESSAGE_RESPONSE = "CHAT: %s\nCLIENT_NAME: %s\nMESSAGE: %s\n\n"
-    JOIN_MESSAGE = "JOINED_ROOM: %d\nCLIENT_NAME: %s"
+    MESSAGE_RESPONSE = "CHAT:%s\nCLIENT_NAME:%s\nMESSAGE:%s\n\n"
+    JOIN_MESSAGE = "JOINED_ROOM:%d\nCLIENT_NAME:%s"
 
     def __init__(self, port_use=None):
         TCPServer.__init__(self, port_use, self.handler)
@@ -40,8 +40,8 @@ class ChatServer(TCPServer):
 
     def join(self, con, addr, text):
         request = text.splitlines()
-        room_name = request[0].split()[1]
-        client_name = request[3].split()[1]
+        room_name = request[0].split(":")[1]
+        client_name = request[3].split(":")[1]
 
         hash_room_name = int(hashlib.md5(room_name).hexdigest(), 16)
         hash_client_name = int(hashlib.md5(client_name).hexdigest(), 16)
@@ -61,9 +61,9 @@ class ChatServer(TCPServer):
 
     def leave(self, con, addr, text):
         request = text.splitlines()
-        room_id = int(request[0].split()[1])
-        client_id = int(request[1].split()[1])
-        client_name = request[2].split()[1]
+        room_id = int(request[0].split(":")[1])
+        client_id = int(request[1].split(":")[1])
+        client_name = request[2].split(":")[1]
         return_string = self.LEAVE_REQUEST_RESPONSE_SUCCESS % (room_id, client_id)
         if room_id in self.rooms.keys() and client_id in self.rooms[room_id].keys():
             del self.rooms[room_id][client_id]
@@ -76,10 +76,10 @@ class ChatServer(TCPServer):
 
     def message(self, con, addr, text):
         request = text.splitlines()
-        room_id = int(request[0].split()[1])
-        client_id = int(request[1].split()[1])
-        client_name = request[2].split()[1]
-        msg = request[3].split()[1]
+        room_id = int(request[0].split(":")[1])
+        client_id = int(request[1].split(":")[1])
+        client_name = request[2].split(":")[1]
+        msg = request[3].split(":")[1]
         if room_id in self.rooms.keys() and client_id in self.rooms[room_id].keys():
             return_string = self.MESSAGE_RESPONSE % (room_id, client_name, msg)
             for client in self.rooms[room_id].keys():
@@ -89,7 +89,7 @@ class ChatServer(TCPServer):
 
     def disconnect(self, con, addr, text):
         request = text.splitlines()
-        client_id = int(request[1].split()[1])
+        client_id = int(request[1].split(":")[1])
         rooms = self.rooms.keys()
         for room in rooms:
             if client_id in self.rooms[room].keys():

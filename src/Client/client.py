@@ -15,18 +15,18 @@ logging.basicConfig(filename=epoch_time+'.log', level=logging.DEBUG)
 class TCPClient:
     PORT = 8000
     HOST = "0.0.0.0"
-    JOIN_HEADER = "JOIN_CHATROOM: %s\nCLIENT_IP: 0\nPORT: 0\nCLIENT_NAME: %s"
-    LEAVE_HEADER = "LEAVE_CHATROOM: %s\nJOIN_ID: %s\nCLIENT_NAME: %s"
-    MESSAGE_HEADER = "CHAT: %s\nJOIN_ID: %s\nCLIENT_NAME: %s\nMESSAGE: %s\n\n"
-    DISCONNECT_HEADER = "DISCONNECT: 0\nPORT: 0\nCLIENT_NAME: %s"
+    JOIN_HEADER = "JOIN_CHATROOM:%s\nCLIENT_IP:0\nPORT:0\nCLIENT_NAME:%s"
+    LEAVE_HEADER = "LEAVE_CHATROOM:%s\nJOIN_ID:%s\nCLIENT_NAME:%s"
+    MESSAGE_HEADER = "CHAT:%s\nJOIN_ID:%s\nCLIENT_NAME:%s\nMESSAGE:%s\n\n"
+    DISCONNECT_HEADER = "DISCONNECT:0\nPORT:0\nCLIENT_NAME:%s"
     JOIN_REGEX = "join [a-zA-Z0-9_]* [a-zA-Z0-9_]*"
     LEAVE_REGEX = "leave [a-zA-Z0-9_]* [a-zA-Z0-9_]* [a-zA-Z0-9_]*"
     MSG_REGEX = "msg [a-zA-Z0-9_]* [a-zA-Z0-9_]* [a-zA-Z0-9_]* [a-zA-Z0-9_]*"
-    MESSAGE_REPLY_REGEX = "CHAT: [0-9]*\nCLIENT_NAME: [a-zA-Z0-9_]*\nMESSAGE: [a-zA-Z0-9_]*\n\n"
-    JOIN_SUCCESS_REGEX = "JOINED_CHATROOM: [a-zA-Z0-9_]*\nSERVER_IP: 0\nPORT: 0\nROOM_REF: [0-9]*\nJOIN_ID: [0-9]*"
-    JOIN_FAIL_REGEX = "ERROR_CODE: [0-9]*\nERROR_DESCRIPTION: .*"
-    LEAVE_REPLY_REGEX = "LEFT_CHATROOM: [0-9]*\nJOIN_ID: [0-9]*"
-    NEW_JOIN_REGEX = "JOINED_ROOM: [0-9]*\nCLIENT_NAME: [a-zA-Z0-9_]*"
+    MESSAGE_REPLY_REGEX = "CHAT:[0-9]*\nCLIENT_NAME:[a-zA-Z0-9_]*\nMESSAGE:[a-zA-Z0-9_]*\n\n"
+    JOIN_SUCCESS_REGEX = "JOINED_CHATROOM:[a-zA-Z0-9_]*\nSERVER_IP:0\nPORT:0\nROOM_REF:[0-9]*\nJOIN_ID:[0-9]*"
+    JOIN_FAIL_REGEX = "ERROR_CODE:[0-9]*\nERROR_DESCRIPTION:.*"
+    LEAVE_REPLY_REGEX = "LEFT_CHATROOM:[0-9]*\nJOIN_ID:[0-9]*"
+    NEW_JOIN_REGEX = "JOINED_ROOM:[0-9]*\nCLIENT_NAME:[a-zA-Z0-9_]*"
     REQUEST = "%s"
     LENGTH = 4096
 
@@ -94,25 +94,25 @@ class TCPClient:
     def join_handler(self, request):
         logging.debug(request)
         request = request.splitlines()
-        room_id = request[3].split()[1]
-        client_id = request[4].split()[1]
+        room_id = request[3].split(":")[1]
+        client_id = request[4].split(":")[1]
         self.rooms[room_id][client_id] = True
         return
 
     def leave_handler(self, request):
         logging.debug(request)
         request = request.splitlines()
-        room_id = request[0].split()[1]
-        client_id = request[1].split()[1]
+        room_id = request[0].split(":")[1]
+        client_id = request[1].split(":")[1]
         if room_id in self.rooms.keys() and client_id in self.rooms[room_id].keys():
             del self.rooms[room_id][client_id]
         return
 
     def msg_handler(self, request):
         request = request.splitlines()
-        room_id = request[0].split()[1]
-        client_id = request[1].split()[1]
-        msg = request[2].split()[1]
+        room_id = request[0].split(":")[1]
+        client_id = request[1].split(":")[1]
+        msg = request[2].split(":")[1]
         logging.debug("Room: " + room_id + "\t Client: " + client_id + "\nMessage: \t" + msg)
         return
 
