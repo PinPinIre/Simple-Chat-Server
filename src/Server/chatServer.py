@@ -8,6 +8,10 @@ import sys
 import hashlib
 from tcpServer import TCPServer
 
+import logging
+
+logging.basicConfig(filename="sentMessage.log", level=logging.DEBUG)
+
 
 class ChatServer(TCPServer):
     JOIN_REGEX = "JOIN_CHATROOM:[a-zA-Z0-9_]*\nCLIENT_IP:0\nPORT:0\nCLIENT_NAME:[a-zA-Z0-9_]*"
