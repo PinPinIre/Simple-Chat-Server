@@ -56,6 +56,7 @@ class ChatServer(TCPServer):
                 msg_con.sendall(join_string)
             self.rooms[hash_room_name][hash_client_name] = con
         return_string = self.JOIN_REQUEST_RESPONSE_SUCCESS % (room_name, self.HOST, self.PORT, hash_room_name, hash_client_name)
+        logging.debug("Sending:\n" + return_string + "\n")
         con.sendall(return_string)
         return
 
@@ -72,6 +73,7 @@ class ChatServer(TCPServer):
                 msg_con = self.rooms[room_id][client]
                 msg_con.sendall(return_string)
         con.sendall(return_string)
+        logging.debug("Sending:\n" + return_string + "\n")
         return
 
     def message(self, con, addr, text):
@@ -85,6 +87,7 @@ class ChatServer(TCPServer):
             for client in self.rooms[room_id].keys():
                 client_con = self.rooms[room_id][client]
                 client_con.sendall(return_string)
+        logging.debug("Sending:\n" + return_string + "\n")
         return
 
     def disconnect(self, con, addr, text):
