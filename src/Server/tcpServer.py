@@ -18,7 +18,7 @@ class TCPServer(object):
     HOST = '0.0.0.0'
     LENGTH = 4096
     MAX_THREAD = 10
-    HELO_RESPONSE = "HELO %s\nIP:%s\nPort:%s\nStudentID:11347076\n\n"
+    HELO_RESPONSE = "HELO %s\nIP:%s\nPort:%s\nStudentID:11347076"
     DEFAULT_RESPONSE = "ERROR: INVALID MESSAGE\n\n"
     HELO_REGEX = "HELO .*"
 
@@ -62,6 +62,7 @@ class TCPServer(object):
     def helo(self, con, addr, text):
         # Reply to helo request
         reply = text.rstrip()  # Remove newline
+        reply = reply.split()[1]
         return_string = self.HELO_RESPONSE % (reply, addr[0], addr[1])
         con.sendall(return_string)
         return
@@ -98,9 +99,9 @@ class ThreadHandler(threading.Thread):
                 message += data
                 if len(data) < self.buffer_length:
                     break
-            logging.debug("Received:\n" + message + "\n")
             # If valid http request with message body
             if len(message) > 0:
+                logging.debug("Received:\n" + message + "\n")
                 if message == "KILL_SERVICE\n\n":
                     print "Killing service"
                     self.server.kill_serv(con)
