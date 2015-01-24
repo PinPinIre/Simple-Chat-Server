@@ -55,13 +55,16 @@ class ChatServer(TCPServer):
         if hash_client_name not in self.rooms[hash_room_name].keys():
             join_string = self.JOIN_MESSAGE % (hash_room_name, client_name)
             self.rooms[hash_room_name][hash_client_name] = con
+            return_string = self.JOIN_REQUEST_RESPONSE_SUCCESS % (room_name, self.HOST, self.PORT, hash_room_name, hash_client_name)
+            logging.debug("Sending:\n" + return_string + "\n")
+            con.sendall(return_string)
             clients = self.rooms[hash_room_name].keys()
             for client in clients:
                 msg_con = self.rooms[hash_room_name][client]
                 msg_con.sendall(join_string)
-        return_string = self.JOIN_REQUEST_RESPONSE_SUCCESS % (room_name, self.HOST, self.PORT, hash_room_name, hash_client_name)
-        logging.debug("Sending:\n" + return_string + "\n")
-        con.sendall(return_string)
+        else:
+            return_string = self.JOIN_REQUEST_RESPONSE_FAIL % (1, "Client already in room")
+            con.sendall(return_string)
         return
 
     def leave(self, con, addr, text):
