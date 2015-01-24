@@ -15,8 +15,8 @@ logging.basicConfig(filename=epoch_time+'.log', level=logging.DEBUG)
 class TCPClient:
     PORT = 8000
     HOST = "0.0.0.0"
-    JOIN_HEADER = "JOIN_CHATROOM:%s\nCLIENT_IP:0\nPORT:0\nCLIENT_NAME:%s\n\n"
-    LEAVE_HEADER = "LEAVE_CHATROOM:%s\nJOIN_ID:%s\nCLIENT_NAME:%s\n\n"
+    JOIN_HEADER = "JOIN_CHATROOM:%s\nCLIENT_IP:0\nPORT:0\nCLIENT_NAME:%s"
+    LEAVE_HEADER = "LEAVE_CHATROOM:%s\nJOIN_ID:%s\nCLIENT_NAME:%s"
     MESSAGE_HEADER = "CHAT:%s\nJOIN_ID:%s\nCLIENT_NAME:%s\nMESSAGE:%s\n\n"
     DISCONNECT_HEADER = "DISCONNECT:0\nPORT:0\nCLIENT_NAME:%s\n\n"
     JOIN_REGEX = "join [a-zA-Z0-9_]* [a-zA-Z0-9_]*"

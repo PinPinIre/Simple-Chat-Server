@@ -14,8 +14,8 @@ logging.basicConfig(filename="sentMessage.log", level=logging.DEBUG)
 
 
 class ChatServer(TCPServer):
-    JOIN_REGEX = "JOIN_CHATROOM:[a-zA-Z0-9_]*\nCLIENT_IP:0\nPORT:0\nCLIENT_NAME:[a-zA-Z0-9_]*\n\n"
-    LEAVE_REGEX = "LEAVE_CHATROOM:[0-9]*\nJOIN_ID:[0-9]*\nCLIENT_NAME:[a-zA-Z0-9_]*\n\n"
+    JOIN_REGEX = "JOIN_CHATROOM:[a-zA-Z0-9_]*\nCLIENT_IP:0\nPORT:0\nCLIENT_NAME:[a-zA-Z0-9_]*"
+    LEAVE_REGEX = "LEAVE_CHATROOM:[0-9]*\nJOIN_ID:[0-9]*\nCLIENT_NAME:[a-zA-Z0-9_]*"
     MESSAGE_REGEX = "CHAT:[0-9]*\nJOIN_ID:[0-9]*\nCLIENT_NAME:[a-zA-Z0-9_]*\nMESSAGE:[a-zA-Z0-9_]*\n\n"
     DISCONNECT_REGEX = "DISCONNECT:0\nPORT:0\nCLIENT_NAME:[a-zA-Z0-9_]*\n\n"
     JOIN_REQUEST_RESPONSE_SUCCESS = "JOINED_CHATROOM:%s\nSERVER_IP:%s\nPORT:%s\nROOM_REF:%d\nJOIN_ID:%d\n\n"
