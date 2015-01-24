@@ -93,7 +93,7 @@ class ChatServer(TCPServer):
         room_id = int(request[0].split()[1])
         client_id = int(request[1].split()[1])
         client_name = request[2].split()[1]
-        msg = request[3].split(maxsplit=1)[1]
+        msg = request[3].split(" ", 1)[1]
         if room_id in self.rooms.keys() and client_id in self.rooms[room_id].keys():
             return_string = self.MESSAGE_RESPONSE % (room_id, client_name, msg)
             for client in self.rooms[room_id].keys():
