@@ -76,13 +76,13 @@ class ChatServer(TCPServer):
         client_name = request[2].split()[1]
         return_string = self.LEAVE_REQUEST_RESPONSE_SUCCESS % (room_id, client_id)
         if room_id in self.rooms.keys() and client_id in self.rooms[room_id].keys():
-            del self.rooms[room_id][client_id]
             clients = self.rooms[room_id].keys()
             for client in clients:
                 msg_con = self.rooms[room_id][client]
                 msg_con.sendall(return_string)
         con.sendall(return_string)
         logging.debug("Sending:\n" + return_string + "\n")
+        del self.rooms[room_id][client_id]
         return
 
     def message(self, con, addr, text):
