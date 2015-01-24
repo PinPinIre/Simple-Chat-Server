@@ -61,8 +61,9 @@ class ChatServer(TCPServer):
             con.sendall(return_string)
             clients = self.rooms[hash_room_name].keys()
             for client in clients:
-                msg_con = self.rooms[hash_room_name][client]
+                msg_con = self.rooms[hash_room_name][hash_client_name]
                 msg_con.sendall(join_string)
+                logging.debug("Sending:\n" + join_string + "\n")
         else:
             return_string = self.JOIN_REQUEST_RESPONSE_FAIL % (1, "Client already in room")
             con.sendall(return_string)
