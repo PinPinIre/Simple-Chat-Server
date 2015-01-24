@@ -15,7 +15,7 @@ logging.basicConfig(filename="sentMessage.log", level=logging.DEBUG)
 
 class ChatServer(TCPServer):
     JOIN_REGEX = "JOIN_CHATROOM:[a-zA-Z0-9_]*\nCLIENT_IP:0\nPORT:0\nCLIENT_NAME:[a-zA-Z0-9_]*"
-    LEAVE_REGEX = "LEAVE_CHATROOM:[0-9]*\nJOIN_ID:[0-9]*\nCLIENT_NAME:[a-zA-Z0-9_]*"
+    LEAVE_REGEX = "LEAVE_CHATROOM: [0-9]*\nJOIN_ID: [0-9]*\nCLIENT_NAME: [a-zA-Z0-9_]*"
     MESSAGE_REGEX = "CHAT:[0-9]*\nJOIN_ID:[0-9]*\nCLIENT_NAME:[a-zA-Z0-9_]*\nMESSAGE:[a-zA-Z0-9_]*\n\n"
     DISCONNECT_REGEX = "DISCONNECT:0\nPORT:0\nCLIENT_NAME:[a-zA-Z0-9_]*\n"
     JOIN_REQUEST_RESPONSE_SUCCESS = "JOINED_CHATROOM:%s\nSERVER_IP:%s\nPORT:%s\nROOM_REF:%d\nJOIN_ID:%d\n"
@@ -71,9 +71,9 @@ class ChatServer(TCPServer):
 
     def leave(self, con, addr, text):
         request = text.splitlines()
-        room_id = int(request[0].split(":")[1])
-        client_id = int(request[1].split(":")[1])
-        client_name = request[2].split(":")[1]
+        room_id = int(request[0].split()[1])
+        client_id = int(request[1].split()[1])
+        client_name = request[2].split()[1]
         return_string = self.LEAVE_REQUEST_RESPONSE_SUCCESS % (room_id, client_id)
         if room_id in self.rooms.keys() and client_id in self.rooms[room_id].keys():
             del self.rooms[room_id][client_id]
