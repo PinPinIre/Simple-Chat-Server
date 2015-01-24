@@ -20,6 +20,7 @@ class ChatServer(TCPServer):
     DISCONNECT_REGEX = "DISCONNECT:0\nPORT:0\nCLIENT_NAME:[a-zA-Z0-9_]*\n"
     JOIN_REQUEST_RESPONSE_SUCCESS = "JOINED_CHATROOM:%s\nSERVER_IP:%s\nPORT:%s\nROOM_REF:%d\nJOIN_ID:%d\n"
     JOIN_REQUEST_RESPONSE_FAIL = "ERROR_CODE:%d\nERROR_DESCRIPTION:%s\n"
+    LEAVE_REQUEST_RESPONSE_SUCCESS = "LEFT_CHATROOM:%s\nJOIN_ID:%s\n"
     LEAVE_REQUEST_RESPONSE_FAIL = LEAVE_REQUEST_RESPONSE_SUCCESS
     MESSAGE_RESPONSE = "CHAT:%s\nCLIENT_NAME:%s\nMESSAGE:%s\n\n"
     MESSAGE_HEADER = "CHAT:%s\nCLIENT_NAME:%s\nMESSAGE:%s\n\n"
@@ -75,7 +76,7 @@ class ChatServer(TCPServer):
         client_id = int(request[1].split()[1])
         client_name = request[2].split()[1]
         return_string = self.LEAVE_REQUEST_RESPONSE_SUCCESS % (room_id, client_id)
-        leave_string = self.LEAVE_MESSAGE % (str(room_id), client_name, client_name + " has left this chatroom.")
+        leave_string = self.LEAVE_MESSAGE % (str(room_id), client_name, client_name + " has leftLEAVE_REQUEST_RESPONSE_SUCCESS this chatroom.")
         if room_id in self.rooms.keys() and client_id in self.rooms[room_id].keys():
             clients = self.rooms[room_id].keys()
             for client in clients:
