@@ -61,10 +61,10 @@ class ChatServer(TCPServer):
             logging.debug("Sending:\n" + return_string + "\n")
             con.sendall(return_string)
             clients = self.rooms[hash_room_name].keys()
+            logging.debug("Sending:\n" + join_string + "\n")
             for client in clients:
-                msg_con = self.rooms[hash_room_name][hash_client_name]
+                msg_con = self.rooms[hash_room_name][client]
                 msg_con.sendall(join_string)
-                logging.debug("Sending:\n" + join_string + "\n")
         else:
             return_string = self.JOIN_REQUEST_RESPONSE_FAIL % (1, "Client already in room")
             con.sendall(return_string)
@@ -76,14 +76,15 @@ class ChatServer(TCPServer):
         client_id = int(request[1].split()[1])
         client_name = request[2].split()[1]
         return_string = self.LEAVE_REQUEST_RESPONSE_SUCCESS % (room_id, client_id)
+        con.sendall(return_string)
+        logging.debug("Sending:\n" + return_string + "\n")
         leave_string = self.LEAVE_MESSAGE % (str(room_id), client_name, client_name + " has leftLEAVE_REQUEST_RESPONSE_SUCCESS this chatroom.")
         if room_id in self.rooms.keys() and client_id in self.rooms[room_id].keys():
+            logging.debug("Sending:\n" + leave_string + "\n")
             clients = self.rooms[room_id].keys()
             for client in clients:
                 msg_con = self.rooms[room_id][client]
                 msg_con.sendall(leave_string)
-        con.sendall(return_string)
-        logging.debug("Sending:\n" + return_string + "\n")
         del self.rooms[room_id][client_id]
         return
 
