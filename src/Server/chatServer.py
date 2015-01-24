@@ -23,7 +23,8 @@ class ChatServer(TCPServer):
     LEAVE_REQUEST_RESPONSE_SUCCESS = "LEFT_CHATROOM:%s\nJOIN_ID:%s\n\n"
     LEAVE_REQUEST_RESPONSE_FAIL = LEAVE_REQUEST_RESPONSE_SUCCESS
     MESSAGE_RESPONSE = "CHAT:%s\nCLIENT_NAME:%s\nMESSAGE:%s\n\n"
-    JOIN_MESSAGE = MESSAGE_REGEX
+    MESSAGE_HEADER = "CHAT:%s\nJOIN_ID:%s\nCLIENT_NAME:%s\nMESSAGE:%s\n\n"
+    JOIN_MESSAGE = MESSAGE_HEADER
 
     def __init__(self, port_use=None):
         TCPServer.__init__(self, port_use, self.handler)
@@ -53,7 +54,7 @@ class ChatServer(TCPServer):
         if hash_room_name not in self.rooms:
             self.rooms[hash_room_name] = dict()
         if hash_client_name not in self.rooms[hash_room_name].keys():
-            join_string = self.JOIN_MESSAGE % (hash_room_name, client_name, client_name + " had joined the room\n\n")
+            join_string = self.JOIN_MESSAGE % (str(hash_room_name), str(hash_client_name), client_name, client_name + " has joined the room\n\n")
             self.rooms[hash_room_name][hash_client_name] = con
             return_string = self.JOIN_REQUEST_RESPONSE_SUCCESS % (room_name, self.HOST, self.PORT, hash_room_name, hash_client_name)
             logging.debug("Sending:\n" + return_string + "\n")
