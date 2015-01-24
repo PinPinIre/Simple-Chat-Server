@@ -54,7 +54,7 @@ class TCPClient:
     def raw_request(self, string):
         # Do nothing if the string is empty or socket doesn't exist
         if len(string) > 0:
-            self.send_request(string+"\n\n")
+            self.send_request(string+"\n")
         return
 
     def join_room(self, query):

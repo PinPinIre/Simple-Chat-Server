@@ -102,7 +102,7 @@ class ThreadHandler(threading.Thread):
             # If valid http request with message body
             if len(message) > 0:
                 logging.debug("Received:\n" + message + "\n")
-                if message == "KILL_SERVICE\n\n":
+                if message == "KILL_SERVICE\n":
                     print "Killing service"
                     self.server.kill_serv(con)
                 elif re.match(self.server.HELO_REGEX, message):
