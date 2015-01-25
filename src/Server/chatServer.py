@@ -31,6 +31,7 @@ class ChatServer(TCPServer):
     def __init__(self, port_use=None):
         TCPServer.__init__(self, port_use, self.handler)
         self.rooms = dict()
+        self.room_ids = []
 
     def handler(self, message, con, addr):
         if re.match(self.JOIN_REGEX, message):
@@ -55,6 +56,7 @@ class ChatServer(TCPServer):
 
         if hash_room_name not in self.rooms:
             self.rooms[hash_room_name] = dict()
+            self.room_ids.append(hash_room_name)
         if hash_client_name not in self.rooms[hash_room_name].keys():
             join_string = self.JOIN_MESSAGE % (str(hash_room_name), client_name, client_name + " has joined this chatroom.")
             self.rooms[hash_room_name][hash_client_name] = con
@@ -107,7 +109,7 @@ class ChatServer(TCPServer):
         request = text.splitlines()
         client_id = request[2].split(":")[1]
         hash_client_name = int(hashlib.md5(client_id).hexdigest(), 16)
-        rooms = self.rooms.keys()
+        rooms = self.room_ids
         for room in rooms:
             if hash_client_name in self.rooms[room].keys():
                 clients = self.rooms[room].keys()
