@@ -109,7 +109,7 @@ class ChatServer(TCPServer):
         hash_client_name = int(hashlib.md5(client_id).hexdigest(), 16)
         rooms = self.rooms.keys()
         for room in rooms:
-            if client_id in self.rooms[room].keys():
+            if hash_client_name in self.rooms[room].keys():
                 clients = self.rooms[room].keys()
                 for client in clients:
                     return_string = self.DISCONNECT_MESSAGE % (str(room), client_id, client_name + " has left this chatroom.")
