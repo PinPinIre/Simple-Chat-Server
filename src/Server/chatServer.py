@@ -26,6 +26,7 @@ class ChatServer(TCPServer):
     MESSAGE_HEADER = "CHAT:%s\nCLIENT_NAME:%s\nMESSAGE:%s\n\n"
     JOIN_MESSAGE = MESSAGE_HEADER
     LEAVE_MESSAGE = MESSAGE_HEADER
+    DISCONNECT_MESSAGE = MESSAGE_HEADER
 
     def __init__(self, port_use=None):
         TCPServer.__init__(self, port_use, self.handler)
@@ -78,7 +79,7 @@ class ChatServer(TCPServer):
         return_string = self.LEAVE_REQUEST_RESPONSE_SUCCESS % (room_id, client_id)
         con.sendall(return_string)
         logging.debug("Sending:\n" + return_string + "\n")
-        leave_string = self.LEAVE_MESSAGE % (str(room_id), client_name, client_name + " has leftLEAVE_REQUEST_RESPONSE_SUCCESS this chatroom.")
+        leave_string = self.LEAVE_MESSAGE % (str(room_id), client_name, client_name + " has left this chatroom.")
         if room_id in self.rooms.keys() and client_id in self.rooms[room_id].keys():
             logging.debug("Sending:\n" + leave_string + "\n")
             clients = self.rooms[room_id].keys()
@@ -104,17 +105,18 @@ class ChatServer(TCPServer):
 
     def disconnect(self, con, addr, text):
         request = text.splitlines()
-        client_id = int(request[1].split(":")[1])
+        client_id = int(request[2].split(":")[1])
+        hash_client_name = int(hashlib.md5(client_id).hexdigest(), 16)
         rooms = self.rooms.keys()
         for room in rooms:
             if client_id in self.rooms[room].keys():
-                del self.rooms[room][client_id]
                 clients = self.rooms[room].keys()
                 for client in clients:
-                    return_string = self.LEAVE_REQUEST_RESPONSE_SUCCESS % (room, client_id)
+                    return_string = self.DISCONNECT_MESSAGE % (str(room), client_id, client_name + " has left this chatroom.")
                     msg_con = self.rooms[room][client]
                     msg_con.sendall(return_string)
         con = None
+        del self.rooms[room][hash_client_name]
         return
 
 
