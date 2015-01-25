@@ -105,7 +105,7 @@ class ChatServer(TCPServer):
 
     def disconnect(self, con, addr, text):
         request = text.splitlines()
-        client_id = int(request[2].split(":")[1])
+        client_id = request[2].split(":")[1]
         hash_client_name = int(hashlib.md5(client_id).hexdigest(), 16)
         rooms = self.rooms.keys()
         for room in rooms:
