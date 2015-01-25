@@ -112,7 +112,7 @@ class ChatServer(TCPServer):
             if hash_client_name in self.rooms[room].keys():
                 clients = self.rooms[room].keys()
                 for client in clients:
-                    return_string = self.DISCONNECT_MESSAGE % (str(room), client_id, client_name + " has left this chatroom.")
+                    return_string = self.DISCONNECT_MESSAGE % (str(room), client_id, client_id + " has left this chatroom.")
                     msg_con = self.rooms[room][client]
                     msg_con.sendall(return_string)
         con = None
