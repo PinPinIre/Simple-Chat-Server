@@ -117,8 +117,8 @@ class ChatServer(TCPServer):
                     return_string = self.DISCONNECT_MESSAGE % (str(room), client_id, client_id + " has left this chatroom.")
                     msg_con = self.rooms[room][client]
                     msg_con.sendall(return_string)
+                del self.rooms[room][hash_client_name]
         con = None
-        del self.rooms[room][hash_client_name]
         return
 
 
