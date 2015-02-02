@@ -1,2 +1,2 @@
 #!/bin/bash
-python server.py $1
+python src/Server/chatServer.py $1
